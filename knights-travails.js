@@ -44,3 +44,42 @@ const adjacencyList = (board) => {
     };
     return list;
 }
+
+const findPaths = (arr) => {
+    let adjList = adjacencyList(makeBoard(8));
+    let index = adjList.findIndex(node => {
+        return node.value[0] === arr[0] && node.value[1] === arr[1];
+    });
+    adjList[index].distance = 0;
+    adjList[index].pred = "N/A";
+
+    let queue = [adjList[index]];
+    let visitedNode = [];
+    distance = 0;
+
+    while (queue.length !== 0) {
+        if (queue[0].distance === null) queue[0].distance = distance;
+
+        visitedNode.push(queue[0]);
+
+        queue[0].neighbors.forEach(pair => {
+            let index = adjList.findIndex(node => {
+                return node[0] === pair[0] && node[1] === pair[1];
+            });
+            let temp = adjList[index];
+
+            if (temp.distance === null && temp.pred === null) {
+                queue.push(temp);
+            };
+
+            if (temp.distance === null) temp.distance = visitedNode[visitedNode.length - 1].distance + 1;
+
+            if (temp.pred === null) temp.pred = visitedNode[visitedNode.length - 1].value;
+        });
+
+        distance += 1;
+        queue.shift();
+    };
+
+    return adjList;
+}
