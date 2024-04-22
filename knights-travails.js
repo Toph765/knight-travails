@@ -64,7 +64,7 @@ const findPaths = (arr) => {
 
         queue[0].neighbors.forEach(pair => {
             let index = adjList.findIndex(node => {
-                return node[0] === pair[0] && node[1] === pair[1];
+                return node.value[0] === pair[0] && node.value[1] === pair[1];
             });
             let temp = adjList[index];
 
@@ -82,4 +82,27 @@ const findPaths = (arr) => {
     };
 
     return adjList;
-}
+};
+
+const shortestPath = (arr, adjList) => {
+    const index = adjList.findIndex(node => {
+        node.value[0] === arr[0] && node.value[1] === arr[1];
+    });
+    const arrNode = adjList[index];
+    let currentNode = arrNode;
+    let pathsArray = [];
+
+    while (currentNode.distance !== 0) {
+        let pred = currentNode.pred;
+        let predIndex = adjList.findIndex(node => {
+            node.value[0] === pred[0] && node.value[1] === pred[1];
+        });
+        let nextNode = adjList[predIndex];
+        pathsArray.push(currentNode.value);
+        currentNode = nextNode;
+    };
+
+    pathsArray.push(currentNode.value);
+    return pathsArray;
+};
+
