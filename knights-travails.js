@@ -11,15 +11,18 @@ const makeBoard = (n) => {
     let board = [];
 
     for (let x = 0; x < n; x++) {
+        board[x] = [];
         for (let y = 0; y < n; y++) {
             board[x][y] = [x, y];
         };
     };
+
+    return board;
 };
 
 const adjacencyList = (board) => {
     let list = [];
-    let moves = [
+    const moves = [
         [2, 1], [2, -1],
         [-2, 1], [-2, -1],
         [1, 2], [1, -2],
@@ -46,8 +49,8 @@ const adjacencyList = (board) => {
 }
 
 const findPaths = (arr) => {
-    let adjList = adjacencyList(makeBoard(8));
-    let index = adjList.findIndex(node => {
+    const adjList = adjacencyList(makeBoard(8));
+    const index = adjList.findIndex(node => {
         return node.value[0] === arr[0] && node.value[1] === arr[1];
     });
     adjList[index].distance = 0;
@@ -55,7 +58,7 @@ const findPaths = (arr) => {
 
     let queue = [adjList[index]];
     let visitedNode = [];
-    distance = 0;
+    let distance = 0;
 
     while (queue.length !== 0) {
         if (queue[0].distance === null) queue[0].distance = distance;
@@ -86,7 +89,7 @@ const findPaths = (arr) => {
 
 const shortestPath = (arr, adjList) => {
     const index = adjList.findIndex(node => {
-        node.value[0] === arr[0] && node.value[1] === arr[1];
+        return node.value[0] === arr[0] && node.value[1] === arr[1];
     });
     const arrNode = adjList[index];
     let currentNode = arrNode;
@@ -95,7 +98,7 @@ const shortestPath = (arr, adjList) => {
     while (currentNode.distance !== 0) {
         let pred = currentNode.pred;
         let predIndex = adjList.findIndex(node => {
-            node.value[0] === pred[0] && node.value[1] === pred[1];
+            return node.value[0] === pred[0] && node.value[1] === pred[1];
         });
         let nextNode = adjList[predIndex];
         pathsArray.push(currentNode.value);
@@ -106,3 +109,28 @@ const shortestPath = (arr, adjList) => {
     return pathsArray;
 };
 
+const knightsTravails = (start, end) => {
+    if (start[0] > 7 || start[0] < 0 || start[1] > 7 || start[1] < 0) {
+        return console.log("Out of the board! array items should be between 0 and 7");
+    };
+
+    if (end[0] > 7 || end[0] < 0 || end[1] > 7 || end[1] < 0) {
+        return console.log("Out of the board! array items should be between 0 and 7");
+    };
+
+    const adjList = findPaths(start);
+    const path = shortestPath(end, adjList);
+    let orderedPath = [];
+
+    for (let i = path.length - 1; i >= 0; i--) {
+        orderedPath.push(path[i]);
+    };
+
+    console.log(`You made it in ${orderedPath.length - 1} move/s!`);
+
+    orderedPath.forEach(pair => console.log(pair));
+};
+
+knightsTravails([0, 0], [7, 7]);
+knightsTravails([2, 1], [5, 4]);
+knightsTravails([1, 6], [6, 1]);
